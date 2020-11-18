@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Nov 18 14:01:41 CET 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0175-db72-4775-00000f0052a0 
+on database directory C:\Users\anzah\OneDrive\Desktop\Java code\01-Datenbank\susskartoffi with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1a6c5a9e 
+Loaded from file:/C:/Users/anzah/iCloudDrive/6-Programmieren/JAVA/00-Software/Apache%20Derby/db-derby-10.15.2.0-bin/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=13.0.2+8
+user.dir=C:\Users\anzah\git\susskartoffi\susskartoffi
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
