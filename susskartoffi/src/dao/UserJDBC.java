@@ -14,7 +14,7 @@ import modell.User.Lifestyle;
 
 public class UserJDBC implements IUser{
 
-	private static final String DBLocation = "Desktop//Code+//Java//DB";	
+	private static final String DBLocation = "C:\\Users\\anzah\\OneDrive\\Desktop\\Java code\\01-Datenbank\\susskartoffi";	
 	private static final String connString = "jdbc:derby:" + DBLocation + ";create=true";
 
 

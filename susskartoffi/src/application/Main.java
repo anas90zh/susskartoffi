@@ -24,9 +24,9 @@ public class Main {
 		try {
 			SetupDbRezept.rezeptInit();
 			
-			Rezept re = new Rezept("thai", 1, "title1", true, "beschreibung", 4, arra, hm ,10);
-			RezeptJDBD rezeptJDBD = new RezeptJDBD();
-			rezeptJDBD.CreateRezept(re);
+//			Rezept re = new Rezept("thai", 1, "title1", true, "beschreibung", 4, arra, hm ,10);
+//			RezeptJDBD rezeptJDBD = new RezeptJDBD();
+//			rezeptJDBD.CreateRezept(re);
 
 			//SetupDbUser.userInit();
 
