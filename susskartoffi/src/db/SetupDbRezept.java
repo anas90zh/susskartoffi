@@ -55,10 +55,10 @@ public class SetupDbRezept {
 
 
 			String zutatTable =" CREATE TABLE ZUTAT ( zutatid INTEGER NOT NULL , " + 
-					" unit VARCHAR(10)," + 
+					" unit VARCHAR(5)," + 
 					" label VARCHAR(10)," + 
 					" name VARCHAR(100) NOT NULL, " + 
-					" kalorien DOUBLE, " + 
+					" kalorien FLOAT, " + 
 					" laktosefreie BOOLEAN, " + 
 					" PRIMARY KEY( zutatid ))";							
 			stmt.executeUpdate(zutatTable);
@@ -68,13 +68,13 @@ public class SetupDbRezept {
 			String rezeptTable = "CREATE TABLE REZEPTE( " + 
 					" userid INTEGER NOT NULL, " + 
 					" rezeptId INTEGER NOT NULL, " + 
-					" herkunft CHAR(13), " + 
-					" diaet CHAR(20),  " + 
+					" herkunft VARCHAR(13), " + 
+					" diaet VARCHAR(20),  " + 
 					" vorbereitungDauer INTEGER, " + 
-					" title CHAR(13), " + 
+					" title VARCHAR(13), " + 
 					" sichtbarkeit BOOLEAN, " + 
 					" beschreibung VARCHAR(200), " + 
-					" Kosten DOUBLE, " + 
+					" Kosten FLOAT, " + 
 					" PRIMARY KEY( rezeptId ))";
 			stmt.executeUpdate(rezeptTable);
 			System.out.println("RezeptTable created 2/3");

@@ -12,14 +12,14 @@ import java.util.List;
 import modell.User;
 import modell.User.Lifestyle;
 
-public class UserJDBC implements IUser{
+public class UserJDBC implements IKlassejdbc<User>{
 
 	private static final String DBLocation = "C:\\Users\\anzah\\OneDrive\\Desktop\\Java code\\01-Datenbank\\susskartoffi";	
 	private static final String connString = "jdbc:derby:" + DBLocation + ";create=true";
 
 
 	@Override
-	public  void CreateUser(User user) throws Exception {
+	public  void Create(User user) throws Exception {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -66,7 +66,7 @@ public class UserJDBC implements IUser{
 	}
 
 	@Override
-	public UserJDBC update(UserJDBC user) throws Exception {
+	public User update(User user) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -116,7 +116,7 @@ public class UserJDBC implements IUser{
 	}
 
 	@Override
-	public void delete(UserJDBC user) throws Exception {
+	public void delete(User user) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

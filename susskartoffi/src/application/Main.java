@@ -22,13 +22,14 @@ public class Main {
 		arra.add(new Zutat(1,"spinat", "g", 100.0, true, "PLANTBASED"));
 		hm.put(1, "test1");
 		try {
-			SetupDbRezept.rezeptInit();
-			
-//			Rezept re = new Rezept("thai", 1, "title1", true, "beschreibung", 4, arra, hm ,10);
-//			RezeptJDBD rezeptJDBD = new RezeptJDBD();
-//			rezeptJDBD.CreateRezept(re);
+//   		SetupDbRezept.rezeptInit();
+//			SetupDbUser.userInit();
 
-			//SetupDbUser.userInit();
+			
+			Rezept re = new Rezept("thai", 1, "title1", true, "beschreibung", 4, arra, hm ,10);
+			RezeptJDBD rezeptJDBD = new RezeptJDBD();
+			rezeptJDBD.Create(re);
+
 
 			//			User us = new User( 12, "anas", "asad","VEGETARIA");
 			//			UserJDBC userJDBC = new UserJDBC();

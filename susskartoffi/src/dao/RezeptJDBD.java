@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,14 +13,14 @@ import modell.Rezept;
 import modell.User;
 import modell.Zutat;
 
-public class RezeptJDBD implements IRezept{
+public class RezeptJDBD implements IKlassejdbc<Rezept>{
 	
 	private static final String DBLocation = "C:\\Users\\anzah\\OneDrive\\Desktop\\Java code\\01-Datenbank\\susskartoffi";	
 	private static final String connString = "jdbc:derby:" + DBLocation + ";create=true";
 	
 	
 	@Override
-	public void CreateRezept(Rezept rezept) throws Exception {
+	public void Create(Rezept rezept) throws Exception {
 			Connection conn = null;
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -36,7 +37,6 @@ public class RezeptJDBD implements IRezept{
 					System.out.println("Rezept already exist ");
 					return ;
 				}
-				System.out.println(rezept.getKosten());
 
 				//insert stmt in to Rezept table
 				String insertStmt= "INSERT INTO REZEPTE (userId, rezeptId , herkunft, diaet, vorbereitungDauer, title, sichtbarkeit, beschreibung, Kosten) VALUES(" + 
@@ -46,7 +46,7 @@ public class RezeptJDBD implements IRezept{
 						+ "'" + rezept.getDiaet()+ "'" + ", " 
 						+ rezept.getVorbereitungDauer()+ ", "
 						+ "'" + rezept.getTitle()+ "'" + ", " 
-						+ "'" + rezept.istSichtbar()+ "'" + ", " 
+						+ rezept.istSichtbar() + ", " 
 						+ "'" + rezept.getBeschreibung()+ "'" + ", " 
 						+ rezept.getKosten() + " )" ;
 
@@ -62,21 +62,18 @@ public class RezeptJDBD implements IRezept{
 							+ "'" + zutat.getLabel() + "'" + ", " 
 							+ "'" + zutat.getName()+ "'" + ", " 
 							+ zutat.getKalorien()+ ", "
-							+ zutat.isLaktosefreie()+ ", "
-							+ " )" ;
+							+ zutat.isLaktosefreie()+ " )" ;
 
 					stmt.executeUpdate(insertZutat);
-	
+
 				}
 				
-				System.out.println("test n2 ");
 
 				//insert stmt in to schritte table
 				for(Integer key : rezept.getSchritte().keySet() ) {
 					String insertschritt= "INSERT INTO SCHRITTE (schrittkey, text ) VALUES(" + 
 							+ key.intValue() + ", " 
-							+ "'" + rezept.getSchritte().get(key) + "'" 
-							+ " )" ;
+							+ "'" + rezept.getSchritte().get(key) + "' )";
 
 					stmt.executeUpdate(insertschritt);
 	
@@ -109,9 +106,51 @@ public class RezeptJDBD implements IRezept{
 	}
 	@Override
 	public List<Rezept> getAll() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			String selecttStmt= "SELECT * FROM NUTZER " ;
+			ArrayList<Integer> favRezept = new ArrayList<>();
+			ArrayList<Rezept> users = new ArrayList<>();
+			
+			
+			
+			try {
+				conn = DriverManager.getConnection(connString);
+				System.out.println("Connection established userJDBClass/ get Methode ");
+
+				stmt = conn.prepareStatement(selecttStmt);
+				rs = stmt.executeQuery();
+				while(rs.next()) {
+					users.add(new User(rs.getInt("userId"),rs.getString("userName"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
+
+				}
+
+			} catch (SQLException e) {
+				System.out.println("error add mehtod\n" + e.getMessage());	
+			}
+
+			finally{
+				try {
+					if(stmt!=null)
+						stmt.close();
+					if(conn!=null)
+						conn.close();
+
+				}catch(SQLException e) {
+					System.out.println("error bei connection schliessen\n" + e.getMessage());
+					e.printStackTrace();	
+				}
+			}
+
+
+
+			return users;
+		}
+
+
+
+
 	@Override
 	public void delete(Rezept rezept) throws Exception {
 		// TODO Auto-generated method stub
