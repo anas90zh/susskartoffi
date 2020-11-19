@@ -1,4 +1,4 @@
-package dao;
+package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +19,7 @@ public class UserJDBC implements IKlassejdbc<User>{
 
 
 	@Override
-	public  void Create(User user) throws Exception {
+	public void Create(User user) throws Exception {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -72,11 +72,11 @@ public class UserJDBC implements IKlassejdbc<User>{
 	}
 
 	@Override
-	public ArrayList<User> getAll() throws Exception {
+	public ArrayList<User> getAll(String selectStmt) throws Exception {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String selecttStmt= "SELECT * FROM NUTZER " ;
+
 		ArrayList<Integer> favRezept = new ArrayList<>();
 		ArrayList<User> users = new ArrayList<>();
 		
@@ -86,7 +86,7 @@ public class UserJDBC implements IKlassejdbc<User>{
 			conn = DriverManager.getConnection(connString);
 			System.out.println("Connection established userJDBClass/ get Methode ");
 
-			stmt = conn.prepareStatement(selecttStmt);
+			stmt = conn.prepareStatement(selectStmt);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				users.add(new User(rs.getInt("userId"),rs.getString("userName"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
@@ -120,5 +120,82 @@ public class UserJDBC implements IKlassejdbc<User>{
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void InitDatenbank()throws SQLException{
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DriverManager.getConnection(connString);
+			stmt = conn.createStatement();
+			System.out.println("Connection established UserClass ");
+
+
+
+			try {				
+				rs = conn.getMetaData().getTables(null, null, "NUTZER" ,new String[] {"TABLE"});
+				if(rs.next()) {
+					stmt.executeUpdate("DROP TABLE " + "NUTZER");
+					System.out.println("dropTable Nuzer excuted");
+				}
+
+			} catch (SQLException e) {
+				System.out.println("error in drop table block nutzer\n" + e.getMessage());	
+			}
+			
+			try {				
+				rs = conn.getMetaData().getTables(null, null, "FAVREZEPTE" ,new String[] {"TABLE"});
+				if(rs.next()) {
+					stmt.executeUpdate("DROP TABLE " + "FAVREZEPTE");
+					System.out.println("dropTable FAVREZEPTE excuted");
+				}
+
+			} catch (SQLException e) {
+				System.out.println("error in drop table block favrezepte\n" + e.getMessage());	
+			}
+
+
+			String nutzerTable = "CREATE TABLE NUTZER ( userId INTEGER NOT NULL, " + 
+					" userName VARCHAR(20) NOT NULL,  " + 
+					" password VARCHAR(100)," + 
+					" lifeStyle VARCHAR(10),  " + 
+					" erstellteRezepte INTEGER," + 
+					" PRIMARY KEY( userId ))";
+			stmt.executeUpdate(nutzerTable);
+			System.out.println("UserTable created 1/2");
+
+			String favRezepteTable = "CREATE TABLE FAVREZEPTE ( favReID INTEGER NOT NULL, rezeptId INTEGER NOT NULL," +
+					" PRIMARY KEY( favReID ))";
+			stmt.executeUpdate(favRezepteTable);
+			System.out.println("UserTable created 2/2");
+
+
+
+
+		} catch (SQLException e) {
+			System.out.println("error in main tryCath block\n" + e.getMessage());		}
+
+		finally{
+			try {
+				if(stmt!=null)
+					stmt.close();
+				if(conn!=null)
+					conn.close();
+
+			}catch(SQLException e) {
+				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+		
+	}
+
+
+		
+		
+		
+
 
 }
