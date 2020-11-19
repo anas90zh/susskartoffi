@@ -54,19 +54,20 @@ public class SetupDbRezept {
 				System.out.println("error in drop table block schritte\n" + e.getMessage());		}
 
 
-			String zutatTable =" CREATE TABLE ZUTAT ( zutatid INTEGER NOT NULL , " + 
-					" unit VARCHAR(5)," + 
-					" label VARCHAR(10)," + 
+			String zutatTable =" CREATE TABLE ZUTAT ( zutatid INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1) , " + 
+					" rezeptId INTEGER NOT NULL, " + 
 					" name VARCHAR(100) NOT NULL, " + 
-					" kalorien FLOAT, " + 
+					" unit VARCHAR(5)," + 
+					" kalorien INTEGER, " + 
 					" laktosefreie BOOLEAN, " + 
+					" label VARCHAR(10)," + 
 					" PRIMARY KEY( zutatid ))";							
 			stmt.executeUpdate(zutatTable);
 			System.out.println("ZutatTable created 1/3");
 
 
 			String rezeptTable = "CREATE TABLE REZEPTE( " + 
-					" userid INTEGER NOT NULL, " + 
+					" userId INTEGER NOT NULL, " + 
 					" rezeptId INTEGER NOT NULL, " + 
 					" herkunft VARCHAR(13), " + 
 					" diaet VARCHAR(20),  " + 
@@ -74,16 +75,18 @@ public class SetupDbRezept {
 					" title VARCHAR(13), " + 
 					" sichtbarkeit BOOLEAN, " + 
 					" beschreibung VARCHAR(200), " + 
-					" Kosten FLOAT, " + 
+					" portionen INTEGER, " + 
+					" kosten FLOAT, " + 
 					" PRIMARY KEY( rezeptId ))";
 			stmt.executeUpdate(rezeptTable);
 			System.out.println("RezeptTable created 2/3");
-
 			
-			String schrittTable = "CREATE TABLE SCHRITTE ( " + 
-					" schrittkey INTEGER NOT NULL, " + 
+
+			String schrittTable = "CREATE TABLE SCHRITTE ( " +
+					" schrittId INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1)," + 
+					" rezeptId INTEGER , " + 
 					" text VARCHAR(200), " + 
-					" PRIMARY KEY( schrittkey ))";
+					" PRIMARY KEY( schrittId ))";
 			stmt.executeUpdate(schrittTable);
 			System.out.println("schrittTable created 3/3");
 

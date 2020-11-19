@@ -1,8 +1,10 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import modell.User;
+import modell.Zutat;
 
 public interface IKlassejdbc<T> {
 
@@ -10,7 +12,7 @@ public interface IKlassejdbc<T> {
 	
 	public T update(T t) throws Exception;
 
-	public List<T> getAll() throws Exception;
+	public ArrayList<T> getAll() throws Exception;
 
 	public void delete(T t) throws Exception;
 

@@ -3,6 +3,7 @@ package modell;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Rezept {
 
@@ -14,16 +15,17 @@ public class Rezept {
 	private int vorbereitungDauer;
 	private boolean sichtbarkeit;
 	private String beschreibung;
-	private HashMap<Integer,String> schritte ;
+	private ArrayList<String> schritte;
 	private ArrayList<Zutat> zutaten;
 	private int portionen;
 	private double kosten;
-	
-	
-	public Rezept(String herkunft, int userId, String title, boolean sichbarkeit, String bescreibung,
-		int portionen,ArrayList<Zutat> zutaten ,HashMap<Integer, String> schritte,double kosten) {
+
+
+	public Rezept(int userId, int rezeptId,String herkunft, String diaet, int vorbereitungDauer, String title, boolean sichbarkeit, String bescreibung,
+			int portionen,double kosten, ArrayList<Zutat> zutaten ,ArrayList<String> schritte) {
 		this.herkunft = herkunft;
 		this.userId = userId;
+		this.rezeptId = rezeptId;
 		this.title = title;
 		this.sichtbarkeit = sichbarkeit;
 		this.beschreibung = bescreibung;
@@ -31,6 +33,8 @@ public class Rezept {
 		this.zutaten = zutaten;
 		this.portionen = portionen;
 		this.kosten= kosten;
+		this.diaet = diaet;
+		this.vorbereitungDauer = vorbereitungDauer;
 
 	}
 
@@ -116,12 +120,12 @@ public class Rezept {
 	}
 
 
-	public HashMap<Integer, String> getSchritte() {
+	public ArrayList<String> getSchritte() {
 		return schritte;
 	}
 
 
-	public void setSchritte(HashMap<Integer, String> schritte) {
+	public void setSchritte(ArrayList<String> schritte) {
 		this.schritte = schritte;
 	}
 
@@ -155,10 +159,31 @@ public class Rezept {
 	public void setZutaten(ArrayList<Zutat> zutaten) {
 		this.zutaten = zutaten;
 	}
-	
-	
 
 
-	
-	
+
+
+	@Override
+	public String toString() {
+
+		//String schritteSt = schritte.stream().map(Object::toString).collect(Collectors.joining(", "));
+		StringBuilder zutatenSt = new StringBuilder();
+		for(Zutat z : zutaten) {
+			zutatenSt.append(z);
+			zutatenSt.append("\t");
+			
+		}
+
+
+		return "Rezept [herkunft=" + herkunft + ", userId=" + userId + ", rezeptId=" + rezeptId + ", title=" + title
+				+ ", diaet=" + diaet + ", vorbereitungDauer=" + vorbereitungDauer + ", sichtbarkeit=" + sichtbarkeit
+				+ ", beschreibung=" + beschreibung + ", schritte=" + schritte + ", zutaten=" + zutaten + ", portionen="
+				+ portionen + ", kosten=" + kosten + "]";
+	}
+
+
+
+
+
+
 }

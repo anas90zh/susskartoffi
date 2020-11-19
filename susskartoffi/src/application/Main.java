@@ -15,21 +15,31 @@ public class Main {
 
 	private static ArrayList<Integer> ar = new ArrayList<>();
 	private static ArrayList<Zutat> arra = new ArrayList<>();
-	private static HashMap<Integer, String> hm = new HashMap<>();
 
 	public static void main(String[] args) {
 		ar.add(2);
-		arra.add(new Zutat(1,"spinat", "g", 100.0, true, "PLANTBASED"));
-		hm.put(1, "test1");
+		arra.add(new Zutat(1,"spinat", "g", 100, true, "PLANTBASED"));
+		ArrayList<String>  hm = new ArrayList<>();
+		hm.add("test");
+		hm.add("schritt1");
+		hm.add("schritt2");
+
 		try {
-//   		SetupDbRezept.rezeptInit();
+			SetupDbRezept.rezeptInit();
 //			SetupDbUser.userInit();
 
-			
-			Rezept re = new Rezept("thai", 1, "title1", true, "beschreibung", 4, arra, hm ,10);
-			RezeptJDBD rezeptJDBD = new RezeptJDBD();
-			rezeptJDBD.Create(re);
 
+			RezeptJDBD rezeptJDBD = new RezeptJDBD();
+
+			
+			Rezept re = new Rezept(2,2,"thai2","diat2",525,"blavlatitle2",true,"sehr lecker222",4,20.0,arra,hm);
+			rezeptJDBD.Create(re);
+	
+			ArrayList<Zutat> ae = rezeptJDBD.getAlltest();
+			ae.stream().forEach(System.out::println);
+
+			ArrayList<Rezept> ae1 = rezeptJDBD.getAll();
+			ae1.stream().forEach(System.out::println);
 
 			//			User us = new User( 12, "anas", "asad","VEGETARIA");
 			//			UserJDBC userJDBC = new UserJDBC();

@@ -7,12 +7,23 @@ public class Zutat {
 	private Label label;
 	private Unit unit;
 	private int zutatid;
+	private int rezeptId;
 	private String name;
-	private Double kalorien;
+	private int kalorien;
 	private boolean laktosefreie;
 	
 	
-	public Zutat(int zutatid, String name, String unit, double kalorien, boolean laktosefreie, String label){
+	public Zutat(int zutatid,int rezeptId ,String name, String unit, int kalorien, boolean laktosefreie, String label){
+		super();
+		this.label= Label.valueOf(label.toUpperCase());
+		this.unit = Unit.valueOf(unit.toUpperCase());
+		this.name = name;
+		this.zutatid= zutatid;
+		this.rezeptId=rezeptId;
+		this.kalorien = kalorien;
+		this.laktosefreie = laktosefreie;
+	}
+	public Zutat(int zutatid, String name, String unit, int kalorien, boolean laktosefreie, String label){
 		super();
 		this.label= Label.valueOf(label.toUpperCase());
 		this.unit = Unit.valueOf(unit.toUpperCase());
@@ -30,6 +41,16 @@ public class Zutat {
 
 	public void setZutatid(int zutatid) {
 		this.zutatid = zutatid;
+	}
+
+
+	public int getRezeptId() {
+		return rezeptId;
+	}
+
+
+	public void setRezeptId(int rezeptId) {
+		this.rezeptId = rezeptId;
 	}
 
 
@@ -64,12 +85,12 @@ public class Zutat {
 	}
 
 
-	public Double getKalorien() {
+	public int getKalorien() {
 		return kalorien;
 	}
 
 
-	public void setKalorien(Double kalorien) {
+	public void setKalorien(int kalorien) {
 		this.kalorien = kalorien;
 	}
 
@@ -82,6 +103,16 @@ public class Zutat {
 	public void setLaktosefreie(boolean laktosefreie) {
 		this.laktosefreie = laktosefreie;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Zutat [label=" + label + ", unit=" + unit + ", zutatid=" + zutatid + ", rezeptId=" + rezeptId
+				+ ", name=" + name + ", kalorien=" + kalorien + ", laktosefreie=" + laktosefreie + "]";
+	}
+
+
+
 
 
 	
