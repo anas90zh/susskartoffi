@@ -19,7 +19,52 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 
 	@Override
 	public void update(int t1, String t2,String t3) throws Exception {
-		// TODO Auto-generated method stub
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		try (Connection conn = DriverManager.getConnection(connString);){
+			System.out.println("Connection established userJDBClass/ Update Methode ");
+			pstmt = conn.prepareStatement("SELECT * FROM USERS WHERE userId=" + userId);
+			rs = pstmt.executeQuery();
+			if(!rs.next()){
+				System.out.println("no User with the ID "+ userId + " is  Found"); //data not exist
+				return;
+			}
+
+			String update = "";
+			switch(updateStmt) {
+			case "updatePassword":
+				update = "UPDATE USERS SET password = ?" + " WHERE userId = ? ";
+				break;
+
+			case "updateUserName":
+				update =  "UPDATE USERS SET userName = ?" + " WHERE userId = ? ";
+				break;
+
+			case "updateLifeStyle":
+				update =  "UPDATE USERS SET lifeStyle = ?" + " WHERE userId = ? ";
+				break;
+			}
+			pstmt = conn.prepareStatement(update);
+			pstmt.setString(1, newEntry);
+			pstmt.setInt(2, userId);
+			pstmt.executeUpdate();
+			System.out.println("Row updated");
+
+		} catch (SQLException e) {
+			System.out.println("error UpdateUser mehtod\n" + e.getMessage());	
+		}
+		finally{
+			try {
+				if(pstmt!=null)
+					pstmt.close();
+				if(rs!=null)
+					rs.close();
+
+			}catch(SQLException e) {
+				System.out.println("error in Finally Block stmt.close \n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
 
 	}
 
