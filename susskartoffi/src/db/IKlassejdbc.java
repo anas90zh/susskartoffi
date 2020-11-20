@@ -14,11 +14,11 @@ public interface IKlassejdbc<T> {
 
 	public void Create(T t) throws Exception ;
 	
-	public T update(T t) throws Exception;
+	public void update(int t1, String t2,String t3) throws Exception;
 
 	public ArrayList<T> getAll(String t) throws Exception;
 
-	public void delete(T t) throws Exception;
+	public void delete(int t) throws Exception;
 
 
 	

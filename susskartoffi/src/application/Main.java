@@ -5,7 +5,8 @@ import java.util.HashMap;
 
 
 import dao.AdminDAO;
-
+import dao.UserDAO;
+import db.UserJDBC;
 import modell.User;
 import modell.Zutat;
 
@@ -26,8 +27,7 @@ public class Main {
 
 		
 		try {
-//			SetupDbRezept setupDbRezept = new SetupDbRezept();
-//			setupDbRezept.InitDatenbank();
+
 //
 //
 //			RezeptJDBC rezeptJDBD = new RezeptJDBC();
@@ -43,17 +43,26 @@ public class Main {
 //			ae1.stream().forEach(System.out::println);
 
 		
+						UserJDBC userJDBC = new UserJDBC();			
 			
-		
-//						User us = new User( 12, "anas", "asad","VEGETARIA");
-//						UserJDBC userJDBC = new UserJDBC();
-//						userJDBC.Create(us);
 //						userJDBC.InitDatenbank();
-//						
+//		
+//						User us = new User( 1, "anna", "ortner","VEGETARIA");
+//						userJDBC.Create(us);
+						
 						AdminDAO dao = new AdminDAO();
+//						dao.deleteUser();
 						ArrayList<User> a = dao.getUser();
 						a.stream().forEach(System.out::println);
 						
+						UserDAO jd = new UserDAO();
+//						jd.updateUser();
+//						a.stream().forEach(System.out::println);
+
+//						UserDAO udao = new UserDAO();
+//						ArrayList<User> aa =udao.getUser(1);
+//						aa.stream().forEach(System.out::println);
+
 
 
 

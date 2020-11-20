@@ -20,131 +20,194 @@ public class UserJDBC implements IKlassejdbc<User>{
 
 	@Override
 	public void Create(User user) throws Exception {
-		Connection conn = null;
-		Statement stmt = null;
 		ResultSet rs = null;
-		
-		try {
-			conn = DriverManager.getConnection(connString);
-			stmt = conn.createStatement();
+		//in try ressourcen
+		//connection erstellen 
+		//SQL Anweisungen erzeugen mit Statement und  durchführen 
+		try (Connection conn = DriverManager.getConnection(connString)){
 			System.out.println("Connection established userJDBClass /add Mehode ");
-
-			String selectWhere = "SELECT * FROM NUTZER WHERE  userId=" + user.getUserId();  
-			rs = stmt.executeQuery(selectWhere);
-			if(rs.next()) {
-				System.out.println("user already exist ");
-				return ;
-			}
-			
-			
-			
-			String insertStmt= "INSERT INTO NUTZER (userId, userName, password, lifeStyle, erstellteRezepte) VALUES(" + 
-					+ user.getUserId() + ", " 
-					+ "'" + user.getUserName() + "'" + ", " 
-					+ "'" + user.getPassword() + "'" + ", " 
-					+ "'" + user.getLifstyle().toUpperCase()+ "'" + ", " 
-					+ user.getErstellteRezepte() + " )" ;
-
-			stmt.executeUpdate(insertStmt);
+			try (Statement stmt = conn.createStatement() ){
+				//checken ob die User schon exsistiern 
+				String selectWhere = "SELECT * FROM USERS WHERE  userId=" + user.getUserId();
+				rs = stmt.executeQuery(selectWhere);
+				if(rs.next()) {
+					System.out.println("user already exist ");
+					return ;
+				}
+				// insert neue User in die USERS Tablle 
+				String insertStmt= "INSERT INTO USERS (userId, userName, password, lifeStyle, erstellteRezepte) VALUES(" + 
+						+ user.getUserId() + ", " 
+						+ "'" + user.getUserName() + "'" + ", " 
+						+ "'" + user.getPassword() + "'" + ", " 
+						+ "'" + user.getLifstyle().toUpperCase()+ "'" + ", " 
+						+ user.getErstellteRezepte() + " )" ;
+				stmt.executeUpdate(insertStmt);
+			} 
 
 		} catch (SQLException e) {
-			System.out.println("error add mehtod\n" + e.getMessage());	
+			System.out.println("error Create mehtod\n" + e.getMessage());	
+		}
+
+		finally {
+			try {
+				rs.close();
+			} catch (SQLException e2) {
+				System.out.println("error Create mehtod in finally Block rs.close \n" + e2.getMessage());
+			}
+		}
+
+
+	}
+
+	@SuppressWarnings({ "null", "resource" })
+	@Override
+	public void update(int userId, String updateStmt, String newEntry) throws Exception {
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		try (Connection conn = DriverManager.getConnection(connString);){
+			System.out.println("Connection established userJDBClass/ Update Methode ");
+			pstmt = conn.prepareStatement("SELECT * FROM USERS WHERE userId=" + userId);
+			rs = pstmt.executeQuery();
+			if(!rs.next()){
+				System.out.println("no User with the ID "+ userId + " is  Found"); //data not exist
+				return;
+			}
+
+			String update = "";
+			switch(updateStmt) {
+			case "updatePassword":
+				update = "UPDATE USERS SET password = ?" + " WHERE userId = ? ";
+				break;
+
+			case "updateUserName":
+				update =  "UPDATE USERS SET userName = ?" + " WHERE userId = ? ";
+				break;
+
+			case "updateLifeStyle":
+				update =  "UPDATE USERS SET lifeStyle = ?" + " WHERE userId = ? ";
+				break;
+			}
+			pstmt = conn.prepareStatement(update);
+			pstmt.setString(1, newEntry);
+			pstmt.setInt(2, userId);
+			pstmt.executeUpdate();
+			System.out.println("Row updated");
+
+		} catch (SQLException e) {
+			System.out.println("error UpdateUser mehtod\n" + e.getMessage());	
 		}
 		finally{
 			try {
-				if(stmt!=null)
-					stmt.close();
-				if(conn!=null)
-					conn.close();
+				if(pstmt!=null)
+					pstmt.close();
+				if(rs!=null)
+					rs.close();
 
 			}catch(SQLException e) {
-				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				System.out.println("error in Finally Block stmt.close \n" + e.getMessage());
 				e.printStackTrace();	
 			}
 		}
 
-	}
 
-	@Override
-	public User update(User user) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public ArrayList<User> getAll(String selectStmt) throws Exception {
-		Connection conn = null;
-		PreparedStatement stmt = null;
 		ResultSet rs = null;
-
 		ArrayList<Integer> favRezept = new ArrayList<>();
-		ArrayList<User> users = new ArrayList<>();
-		
-		
-		
-		try {
-			conn = DriverManager.getConnection(connString);
+		ArrayList<User> users =null;
+
+		//in try ressourcen wird 
+		//connection erstellen 
+		//SQL Anweisungen erzeugen mit Statement und  durchführen 
+		try (Connection conn = DriverManager.getConnection(connString)){
 			System.out.println("Connection established userJDBClass/ get Methode ");
-
-			stmt = conn.prepareStatement(selectStmt);
-			rs = stmt.executeQuery();
-			while(rs.next()) {
-				users.add(new User(rs.getInt("userId"),rs.getString("userName"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
-
+			try(PreparedStatement stmt = conn.prepareStatement(selectStmt)) {
+				//resultSet query duchfuhren und mit hilfe der while schlieife die User ArrayList füllen
+				rs = stmt.executeQuery();
+				users = new ArrayList<>();
+				while(rs.next()) {
+					users.add(new User(rs.getInt("userId"),rs.getString("userName"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
+				}
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error add mehtod\n" + e.getMessage());	
+			System.out.println("error getAllUser mehtod\n" + e.getMessage());	
 		}
-
+		//resultSet schließen
 		finally{
 			try {
-				if(stmt!=null)
-					stmt.close();
-				if(conn!=null)
-					conn.close();
-
+				if(rs!=null)
+					rs.close();
 			}catch(SQLException e) {
-				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				System.out.println("error getAllUser mehtod , in finally block rs.close\n " + e.getMessage());
 				e.printStackTrace();	
 			}
 		}
-
-
 
 		return users;
 	}
 
 	@Override
-	public void delete(User user) throws Exception {
-		// TODO Auto-generated method stub
+	public void delete(int userId) throws Exception {
+		ResultSet rs = null;           
+		
+		try (Connection conn = DriverManager.getConnection(connString);
+				Statement stmt = conn.createStatement()){			
+			System.out.println("Connection established UserClass Delete Mehode\n ");
+
+			//check ob die Table ist schon exisitiert, wenn schon exsistiert dann loschen 
+			rs= stmt.executeQuery("SELECT * FROM USERS WHERE userId=" + userId);
+			if(!rs.next()){
+				System.out.println("no User with the ID "+ userId + " is  Found"); //data not exist
+				return;
+			}
+
+
+			String deleteUser =	"DELETE FROM USERS WHERE " + "userId= " + userId;
+			stmt.executeUpdate(deleteUser);
+			System.out.println("User deleted");
+
+		} catch (SQLException e) {
+			System.out.println("error in main tryCath block\n DeletUserMehod" + e.getMessage());
+		}
+
+		finally{
+			try {
+				if(rs!=null)
+					rs.close();
+
+			}catch(SQLException e) {
+				System.out.println("error in Finally Bock rs.close USerDelete\n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
 
 	}
 
 	@Override
 	public void InitDatenbank()throws SQLException{
-		Connection conn = null;
-		Statement stmt = null;
 		ResultSet rs = null;
 
-		try {
-			conn = DriverManager.getConnection(connString);
-			stmt = conn.createStatement();
-			System.out.println("Connection established UserClass ");
-
-
-
+		//in try ressourcen
+		//connection erstellen 
+		//SQL Anweisungen erzeugen mit Statement und  durchführen 
+		try (Connection conn = DriverManager.getConnection(connString);
+				Statement stmt = conn.createStatement()){			
+			System.out.println("Connection established UserClass InitDB Mehode\n ");
+			//check ob die Table ist schon exisitiert, wenn schon exsistiert dann loschen 
 			try {				
-				rs = conn.getMetaData().getTables(null, null, "NUTZER" ,new String[] {"TABLE"});
+				rs = conn.getMetaData().getTables(null, null, "USERS" ,new String[] {"TABLE"});
 				if(rs.next()) {
-					stmt.executeUpdate("DROP TABLE " + "NUTZER");
+					stmt.executeUpdate("DROP TABLE " + "USERS");
 					System.out.println("dropTable Nuzer excuted");
 				}
 
 			} catch (SQLException e) {
-				System.out.println("error in drop table block nutzer\n" + e.getMessage());	
+				System.out.println("error in drop table block USERS\n" + e.getMessage());	
 			}
-			
+			//check ob die Table ist schon exisitiert, wenn schon exsistiert dann loschen 
 			try {				
 				rs = conn.getMetaData().getTables(null, null, "FAVREZEPTE" ,new String[] {"TABLE"});
 				if(rs.next()) {
@@ -156,46 +219,37 @@ public class UserJDBC implements IKlassejdbc<User>{
 				System.out.println("error in drop table block favrezepte\n" + e.getMessage());	
 			}
 
-
-			String nutzerTable = "CREATE TABLE NUTZER ( userId INTEGER NOT NULL, " + 
+			// User Table erstellen 
+			String userTable = "CREATE TABLE USERS ( userId INTEGER NOT NULL, " + 
 					" userName VARCHAR(20) NOT NULL,  " + 
 					" password VARCHAR(100)," + 
 					" lifeStyle VARCHAR(10),  " + 
 					" erstellteRezepte INTEGER," + 
 					" PRIMARY KEY( userId ))";
-			stmt.executeUpdate(nutzerTable);
+			stmt.executeUpdate(userTable);
 			System.out.println("UserTable created 1/2");
 
+			// FAVREZEPTE Table erstellen 
 			String favRezepteTable = "CREATE TABLE FAVREZEPTE ( favReID INTEGER NOT NULL, rezeptId INTEGER NOT NULL," +
 					" PRIMARY KEY( favReID ))";
 			stmt.executeUpdate(favRezepteTable);
 			System.out.println("UserTable created 2/2");
-
-
-
 
 		} catch (SQLException e) {
 			System.out.println("error in main tryCath block\n" + e.getMessage());		}
 
 		finally{
 			try {
-				if(stmt!=null)
-					stmt.close();
-				if(conn!=null)
-					conn.close();
+				if(rs!=null)
+					rs.close();
 
 			}catch(SQLException e) {
-				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				System.out.println("error in Finally Blick rs.close \n" + e.getMessage());
 				e.printStackTrace();	
 			}
 		}
-		
+
 	}
-
-
-		
-		
-		
 
 
 }
