@@ -7,51 +7,80 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import modell.Rezept;
 import modell.Zutat;
 
-public class RezeptJDBC implements IKlassejdbc<Rezept>{
+public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 
 	private static final String DBLocation = "C:\\Users\\anzah\\OneDrive\\Desktop\\Java code\\01-Datenbank\\susskartoffi";	
 	private static final String connString = "jdbc:derby:" + DBLocation + ";create=true";
 
-
+	//update in Rezepte Table
+	@SuppressWarnings("resource")
 	@Override
-	public void update(int t1, String t2,String t3) throws Exception {
+	public void update(int rezeptId, String updateStmt,String newEntry) throws Exception {
 		PreparedStatement pstmt =null;
 		ResultSet rs = null;
 		try (Connection conn = DriverManager.getConnection(connString);){
 			System.out.println("Connection established userJDBClass/ Update Methode ");
-			pstmt = conn.prepareStatement("SELECT * FROM USERS WHERE userId=" + userId);
+
+
+			pstmt = conn.prepareStatement("SELECT * FROM REZEPTE WHERE rezeptId=" + rezeptId);
 			rs = pstmt.executeQuery();
 			if(!rs.next()){
-				System.out.println("no User with the ID "+ userId + " is  Found"); //data not exist
+				System.out.println("no User with the ID "+ rezeptId + " is  Found"); //data not exist
 				return;
 			}
-
 			String update = "";
 			switch(updateStmt) {
-			case "updatePassword":
-				update = "UPDATE USERS SET password = ?" + " WHERE userId = ? ";
+			case "herkunft":
+				update = "UPDATE REZEPTE SET herkunft = ?" + " WHERE rezeptId = ? ";
 				break;
 
-			case "updateUserName":
-				update =  "UPDATE USERS SET userName = ?" + " WHERE userId = ? ";
+			case "diaet":
+				update =  "UPDATE REZEPTE SET diaet = ?" + " WHERE rezeptId = ? ";
 				break;
 
-			case "updateLifeStyle":
-				update =  "UPDATE USERS SET lifeStyle = ?" + " WHERE userId = ? ";
+			case "vorbereitungDauer":
+				update =  "UPDATE REZEPTE SET vorbereitungDauer = ?" + " WHERE rezeptId = ? ";
 				break;
+
+			case "title":
+				update =  "UPDATE REZEPTE SET title = ?" + " WHERE rezeptId = ? ";
+				break;
+
+			case "sichtbarkeit":
+				update =  "UPDATE REZEPTE SET sichtbarkeit = ?" + " WHERE rezeptId = ? ";
+				break;
+
+			case "beschreibung":
+				update =  "UPDATE REZEPTE SET beschreibung = ?" + " WHERE rezeptId = ? ";
+				break;
+
+			case "portionen":
+				update =  "UPDATE REZEPTE SET portionen = ?" + " WHERE rezeptId = ? ";
+				break;
+
+			case "kosten":
+				update =  "UPDATE REZEPTE SET kosten = ?" + " WHERE rezeptId = ? ";
+				break;
+			default :
+				System.out.println("update statment doesnot exsist");
+				return;
 			}
 			pstmt = conn.prepareStatement(update);
-			pstmt.setString(1, newEntry);
-			pstmt.setInt(2, userId);
+			if(Pattern.compile("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$").matcher(newEntry).matches()) {
+				System.out.println(Pattern.compile("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$").matcher(newEntry).matches());
+				pstmt.setInt(1, Integer.parseInt(newEntry));
+			}else {pstmt.setString(1, newEntry);}
+			pstmt.setInt(2, rezeptId);
 			pstmt.executeUpdate();
 			System.out.println("Row updated");
 
 		} catch (SQLException e) {
-			System.out.println("error UpdateUser mehtod\n" + e.getMessage());	
+			System.out.println("error Update Rezept mehtod\n" + e.getMessage());	
 		}
 		finally{
 			try {
@@ -69,21 +98,130 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 	}
 
 
+	//update in the Zutat Table
+	@SuppressWarnings("resource")
+	@Override
+	public void updateZutat(int rezeptId, int zutatid, String updateStmt,String newEntry) throws Exception {
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		try (Connection conn = DriverManager.getConnection(connString);){
+			System.out.println("Connection established userJDBClass/ Update Methode ");
+
+
+			pstmt = conn.prepareStatement("SELECT * FROM ZUTAT WHERE zutatid=" + zutatid);
+			rs = pstmt.executeQuery();
+			if(!rs.next()){
+				System.out.println("no zutat with the zutatid "+  zutatid +" is  Found"); //data not exist
+				return;
+			}
+			String update = "";
+			switch(updateStmt) {
+			case "name":
+				update = "UPDATE ZUTAT SET name = ?" + " WHERE rezeptId = ? " + " AND zutatid= ?";
+				break;
+
+			case "unit":
+				update =  "UPDATE ZUTAT SET unit = ?" + " WHERE rezeptId = ? " + " AND zutatid= ?";
+				break;
+
+			case "kalorien":
+				update =  "UPDATE ZUTAT SET kalorien = ?" + " WHERE rezeptId = ? " + " AND zutatid= ?";
+				break;
+
+			case "laktosefreie":
+				update =  "UPDATE ZUTAT SET laktosefreie = ?" + " WHERE rezeptId = ? " + " AND zutatid= ?";
+				break;
+
+			case "label":
+				update =  "UPDATE ZUTAT SET label = ?" + " WHERE rezeptId = ? " + " AND zutatid= ?";
+				break;
+
+			default :
+				System.out.println("update statment doesnot exsist");
+				return;
+			}
+			pstmt = conn.prepareStatement(update);
+			if(Pattern.compile("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$").matcher(newEntry).matches()) {
+				System.out.println(Pattern.compile("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$").matcher(newEntry).matches());
+				pstmt.setInt(1, Integer.parseInt(newEntry));
+			}else {pstmt.setString(1, newEntry);}
+			pstmt.setInt(2, rezeptId);
+			pstmt.setInt(3, zutatid);
+			pstmt.executeUpdate();
+			System.out.println("Row updated");
+
+		} catch (SQLException e) {
+			System.out.println("error Update Zutat mehtod\n" + e.getMessage());	
+		}
+		finally{
+			try {
+				if(pstmt!=null)
+					pstmt.close();
+				if(rs!=null)
+					rs.close();
+
+			}catch(SQLException e) {
+				System.out.println("error in Finally Block stmt.close \n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+
+	}
+
+	@SuppressWarnings("resource")
+	@Override
+	public void updateSchritte(int rezeptId, int schrittId, String newEntry) throws Exception {
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		try (Connection conn = DriverManager.getConnection(connString);){
+			System.out.println("Connection established userJDBClass/ Update Methode ");
+
+
+			pstmt = conn.prepareStatement("SELECT * FROM SCHRITTE WHERE schrittId=" + schrittId);
+			rs = pstmt.executeQuery();
+			if(!rs.next()){
+				System.out.println("no Schritt with the schrittId "+  schrittId +" is  Found"); //data not exist
+				return;
+			}
+			String update = "UPDATE SCHRITTE SET text = ?" + " WHERE rezeptId = ? " + " AND schrittId= ?";
+			pstmt = conn.prepareStatement(update);
+			pstmt.setString(1, newEntry);
+			pstmt.setInt(2, rezeptId);
+			pstmt.setInt(3, schrittId);
+			pstmt.executeUpdate();
+			System.out.println("Row updated");
+
+		} catch (SQLException e) {
+			System.out.println("error Update Schritt mehtod\n" + e.getMessage());	
+		}
+		finally{
+			try {
+				if(pstmt!=null)
+					pstmt.close();
+				if(rs!=null)
+					rs.close();
+
+			}catch(SQLException e) {
+				System.out.println("error in Finally Block stmt.close \n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+		
+	}
+	
+	
 	
 
-
 	@Override
-	public ArrayList<Rezept> getAll(String st) throws Exception {
-
-
+	public ArrayList<Rezept> getAll(String selectStmt) throws Exception {
 		ArrayList<Rezept> rezepte = new ArrayList<>();
 		ArrayList<Zutat> zutaten = null;
 		ArrayList<String>  schritte = null;	
 
 
 		try(Connection conn =  DriverManager.getConnection(connString);
-				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM REZEPTE");
-				ResultSet rs = stmt.executeQuery()	){
+				PreparedStatement stmt = conn.prepareStatement(selectStmt);
+				ResultSet rs = stmt.executeQuery()){
 
 			while(rs.next()) {
 				schritte = new ArrayList<>();
@@ -100,18 +238,14 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 					System.out.println("error in Schritte try/catch Block\n" + e.getMessage());
 					e.printStackTrace();
 				}
-				
+
 
 				try (PreparedStatement stmt2 = conn.prepareStatement("SELECT * FROM ZUTAT WHERE rezeptId=("+ rs.getInt("rezeptId")+ ")");
 						ResultSet rs2 = stmt2.executeQuery()){
-					System.out.println("Contents of the first result-set is sucess" + schritte.size());
-
 					while(rs2.next()) {
 						zutaten.add(new Zutat(rs2.getInt("zutatid"),rs2.getInt("rezeptId"), rs2.getString("name"), rs2.getString("unit"),
 								rs2.getInt("kalorien"), rs2.getBoolean("laktosefreie"),rs2.getString("label") ));
 					}	
-
-					System.out.println("Contents of the second result-set \n " + zutaten.size());
 
 				} catch (Exception e) {
 					System.out.println("error in Zutat try/catch Block\n" + e.getMessage());
@@ -141,61 +275,6 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 		// TODO Auto-generated method stub
 
 	} 
-
-
-
-
-
-
-
-	public ArrayList<Zutat> getAlltest() throws Exception {
-		Connection conn = null;
-		ResultSet rs2 = null;
-
-		String selecttStmt= "SELECT * FROM ZUTAT";
-		ArrayList<Zutat> zutat = new ArrayList<>();
-
-		conn = DriverManager.getConnection(connString);
-
-		try(PreparedStatement stmt = conn.prepareStatement(selecttStmt)) {
-
-			System.out.println("Connection established userJDBClass/ get Methode ");
-
-			rs2 = stmt.executeQuery();
-
-			while(rs2.next()) {
-				zutat.add(new Zutat(rs2.getInt("zutatid"), rs2.getString("name"), rs2.getString("unit"),
-						rs2.getInt("kalorien"), rs2.getBoolean("laktosefreie"),rs2.getString("label") ));
-			}
-
-		} catch (SQLException e) {
-			System.out.println("error add mehtod\n" + e.getMessage());	
-		}
-
-		finally{
-			try {
-
-				if(conn!=null)
-					conn.close();
-					rs2.close();
-
-			}catch(SQLException e) {
-				System.out.println("error bei connection schliessen\n" + e.getMessage());
-				e.printStackTrace();	
-			}
-		}
-
-
-
-		return zutat;
-	}
-
-
-
-
-
-
-
 
 
 	@Override
@@ -286,7 +365,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 			try {
 				if(pstmt!=null)
 					pstmt.close();
-			
+
 
 			}catch(SQLException e) {
 				System.out.println("error bei connection schliessen\n" + e.getMessage());
@@ -316,7 +395,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 				if(rs.next()) {
 					stmt.executeUpdate("DROP TABLE " + "ZUTAT");
 					System.out.println("dropTable zutat excuted");
-					}
+				}
 
 			} catch (SQLException e) {
 				System.out.println("error in drop table block zutat\n" + e.getMessage());		}
@@ -325,7 +404,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 				rs = conn.getMetaData().getTables(null, null, "REZEPTE" ,new String[] {"TABLE"});
 				if(rs.next()) {
 					stmt.executeUpdate("DROP TABLE " + "REZEPTE");
-				System.out.println("dropTable REZEPTE excuted");
+					System.out.println("dropTable REZEPTE excuted");
 				}
 
 			}catch (SQLException e) {
@@ -336,7 +415,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 				rs = conn.getMetaData().getTables(null, null, "SCHRITTE" ,new String[] {"TABLE"});
 				if(rs.next()) {
 					stmt.executeUpdate("DROP TABLE " + "SCHRITTE");				}
-					System.out.println("dropTable SCHRITTE excuted");
+				System.out.println("dropTable SCHRITTE excuted");
 
 			} catch (SQLException e) {
 				System.out.println("error in drop table block schritte\n" + e.getMessage());		}
@@ -368,7 +447,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 					" PRIMARY KEY( rezeptId ))";
 			stmt.executeUpdate(rezeptTable);
 			System.out.println("RezeptTable created 2/3");
-			
+
 
 			String schrittTable = "CREATE TABLE SCHRITTE ( " +
 					" schrittId INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1)," + 
@@ -394,9 +473,76 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>{
 				e.printStackTrace();	
 			}
 		}
-		
+
 	}
 
+	
+	
+
+
+	public ArrayList<Zutat> getAlltest() throws Exception {
+		Connection conn = null;
+		ResultSet rs2 = null;
+
+		String selecttStmt= "SELECT * FROM ZUTAT";
+		ArrayList<Zutat> zutat = new ArrayList<>();
+
+		conn = DriverManager.getConnection(connString);
+
+		try(PreparedStatement stmt = conn.prepareStatement(selecttStmt)) {
+
+			System.out.println("Connection established userJDBClass/ get Methode ");
+
+			rs2 = stmt.executeQuery();
+
+			while(rs2.next()) {
+				zutat.add(new Zutat(rs2.getInt("zutatid"), rs2.getString("name"), rs2.getString("unit"),
+						rs2.getInt("kalorien"), rs2.getBoolean("laktosefreie"),rs2.getString("label") ));
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error add mehtod\n" + e.getMessage());	
+		}
+
+		finally{
+			try {
+
+				if(conn!=null)
+					conn.close();
+					rs2.close();
+
+			}catch(SQLException e) {
+				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+
+
+
+		return zutat;
+	}
+
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 

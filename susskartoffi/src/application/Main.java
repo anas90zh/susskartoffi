@@ -6,7 +6,9 @@ import java.util.HashMap;
 
 import dao.AdminDAO;
 import dao.UserDAO;
+import db.RezeptJDBC;
 import db.UserJDBC;
+import modell.Rezept;
 import modell.User;
 import modell.Zutat;
 
@@ -28,34 +30,35 @@ public class Main {
 		
 		try {
 
-//
-//
-//			RezeptJDBC rezeptJDBD = new RezeptJDBC();
-//
+			UserDAO userD = new UserDAO();	
+			RezeptJDBC rezeptJDBD = new RezeptJDBC();
+//			rezeptJDBD.InitDatenbank();
 //			
-//			Rezept re = new Rezept(2,2,"thai2","diat2",525,"blavlatitle2",true,"sehr lecker222",4,20.0,arra,hm);
+//			Rezept re = new Rezept(1,1,"thai2","diat2",525,"blavlatitle2",true,"sehr lecker222",4,20.0,arra,hm);
 //			rezeptJDBD.Create(re);
-//	
-//			ArrayList<Zutat> ae = rezeptJDBD.getAlltest();
+//			rezeptJDBD.updateZutat(2,1, "laktosefreie", "false");
+			rezeptJDBD.updateSchritte(2, 1, "bla bla");
+
+			ArrayList<Rezept> ae1 = userD.getAllRezepte();
+			ae1.stream().forEach(System.out::println);
+
+//			
+//			ArrayList<Zutat> ae =rezeptJDBD.getAlltest();
 //			ae.stream().forEach(System.out::println);
-//
-//			ArrayList<Rezept> ae1 = rezeptJDBD.getAll();
-//			ae1.stream().forEach(System.out::println);
 
 		
-						UserJDBC userJDBC = new UserJDBC();			
 			
 //						userJDBC.InitDatenbank();
 //		
 //						User us = new User( 1, "anna", "ortner","VEGETARIA");
 //						userJDBC.Create(us);
 						
-						AdminDAO dao = new AdminDAO();
+//						AdminDAO dao = new AdminDAO();
 //						dao.deleteUser();
-						ArrayList<User> a = dao.getUser();
-						a.stream().forEach(System.out::println);
+//						ArrayList<User> a = dao.getUser();
+//						a.stream().forEach(System.out::println);
 						
-						UserDAO jd = new UserDAO();
+//						UserDAO jd = new UserDAO();
 //						jd.updateUser();
 //						a.stream().forEach(System.out::println);
 
