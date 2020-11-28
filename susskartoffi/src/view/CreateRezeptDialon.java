@@ -65,6 +65,7 @@ public class CreateRezeptDialon extends Dialog<ButtonType> {
 		
 		
 		
+		
 		this.getDialogPane().setContent(gp);
 		ButtonType cancel = ButtonType.CANCEL;
 
