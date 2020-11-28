@@ -19,6 +19,7 @@ public class Rezept {
 	private ArrayList<Zutat> zutaten;
 	private int portionen;
 	private double kosten;
+	private String v;
 
 
 	public Rezept(int userId, int rezeptId,String herkunft, String diaet, int vorbereitungDauer, String title, boolean sichbarkeit, String bescreibung,
@@ -158,6 +159,20 @@ public class Rezept {
 
 	public void setZutaten(ArrayList<Zutat> zutaten) {
 		this.zutaten = zutaten;
+	}
+
+
+
+
+	public String getV() {
+		return v;
+	}
+
+
+
+
+	public void setV(String v) {
+		this.v = v;
 	}
 
 

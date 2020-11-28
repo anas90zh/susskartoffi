@@ -21,6 +21,8 @@ public class UserJDBC implements IKlassejdbc<User>{
 	@Override
 	public void Create(User user) throws Exception {
 		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+
 		//in try ressourcen
 		//connection erstellen 
 		//SQL Anweisungen erzeugen mit Statement und  durchführen 
@@ -35,13 +37,19 @@ public class UserJDBC implements IKlassejdbc<User>{
 					return ;
 				}
 				// insert neue User in die USERS Tablle 
-				String insertStmt= "INSERT INTO USERS (userId, userName, password, lifeStyle, erstellteRezepte) VALUES(" + 
-						+ user.getUserId() + ", " 
-						+ "'" + user.getUserName() + "'" + ", " 
-						+ "'" + user.getPassword() + "'" + ", " 
-						+ "'" + user.getLifstyle().toUpperCase()+ "'" + ", " 
-						+ user.getErstellteRezepte() + " )" ;
-				stmt.executeUpdate(insertStmt);
+				String insertStmt= "INSERT INTO USERS (userName, name, password, lifeStyle) VALUES(" + 
+						"?, " + //Username
+						"?, " + //Name
+						"?, " + //password
+						"? " + //lifstyle
+						")";
+					
+				pstmt = conn.prepareStatement(insertStmt);
+				pstmt.setString(1,user.getUserName());
+				pstmt.setString(2,user.getName());
+				pstmt.setString(3, user.getPassword());
+				pstmt.setString(4, user.getLifstyle());
+				pstmt.executeUpdate();
 			} 
 
 		} catch (SQLException e) {
@@ -50,6 +58,9 @@ public class UserJDBC implements IKlassejdbc<User>{
 
 		finally {
 			try {
+				if(pstmt!=null)
+					pstmt.close();
+				if(rs!=null)
 				rs.close();
 			} catch (SQLException e2) {
 				System.out.println("error Create mehtod in finally Block rs.close \n" + e2.getMessage());
@@ -128,7 +139,7 @@ public class UserJDBC implements IKlassejdbc<User>{
 				rs = stmt.executeQuery();
 				users = new ArrayList<>();
 				while(rs.next()) {
-					users.add(new User(rs.getInt("userId"),rs.getString("userName"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
+					users.add(new User(rs.getInt("userId"),rs.getString("userName"),rs.getString("name"), rs.getString("password"), favRezept ,rs.getString("lifeStyle"),rs.getInt("erstellteRezepte") ));
 				}
 			}
 
@@ -220,8 +231,9 @@ public class UserJDBC implements IKlassejdbc<User>{
 			}
 
 			// User Table erstellen 
-			String userTable = "CREATE TABLE USERS ( userId INTEGER NOT NULL, " + 
-					" userName VARCHAR(20) NOT NULL,  " + 
+			String userTable = "CREATE TABLE USERS ( userId INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1), " + 
+					" userName VARCHAR(20) NOT NULL UNIQUE,  " + 
+					" name VARCHAR(20) NOT NULL,  " + 
 					" password VARCHAR(100)," + 
 					" lifeStyle VARCHAR(10),  " + 
 					" erstellteRezepte INTEGER," + 

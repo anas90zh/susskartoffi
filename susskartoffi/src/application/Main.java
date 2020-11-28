@@ -19,6 +19,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		ar.add(2);
+
 		arra.add(new Zutat(1,"spinat", "g", 100, true, "PLANTBASED"));
 		ArrayList<String>  hm = new ArrayList<>();
 		hm.add("test");
@@ -33,11 +34,11 @@ public class Main {
 			UserDAO userD = new UserDAO();	
 			RezeptJDBC rezeptJDBD = new RezeptJDBC();
 //			rezeptJDBD.InitDatenbank();
-//			
-//			Rezept re = new Rezept(1,1,"thai2","diat2",525,"blavlatitle2",true,"sehr lecker222",4,20.0,arra,hm);
-//			rezeptJDBD.Create(re);
+			
+			Rezept re = new Rezept(1,5,"thai2","diat2",525,"title",true,"sehr lecker222",4,20.0,arra,hm);
+			rezeptJDBD.Create(re);
 //			rezeptJDBD.updateZutat(2,1, "laktosefreie", "false");
-			rezeptJDBD.updateSchritte(2, 1, "bla bla");
+//			rezeptJDBD.updateSchritte(2, 1, "bla bla");
 
 			ArrayList<Rezept> ae1 = userD.getAllRezepte();
 			ae1.stream().forEach(System.out::println);
@@ -47,10 +48,10 @@ public class Main {
 //			ae.stream().forEach(System.out::println);
 
 		
-			
+//						UserJDBC userJDBC = new UserJDBC();
 //						userJDBC.InitDatenbank();
-//		
-//						User us = new User( 1, "anna", "ortner","VEGETARIA");
+		
+//						User us = new User( "anas0090", "Anna ortner","password","VEGETARIA");
 //						userJDBC.Create(us);
 						
 //						AdminDAO dao = new AdminDAO();
@@ -63,9 +64,10 @@ public class Main {
 //						a.stream().forEach(System.out::println);
 
 //						UserDAO udao = new UserDAO();
-//						ArrayList<User> aa =udao.getUser(1);
+//						ArrayList<User> aa =udao.getUser("anas900");
+//						System.out.println(aa.isEmpty());
 //						aa.stream().forEach(System.out::println);
-
+//
 
 
 

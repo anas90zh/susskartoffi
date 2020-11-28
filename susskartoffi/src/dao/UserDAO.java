@@ -11,13 +11,24 @@ import java.util.ArrayList;
 public class UserDAO {
 
 	//Method for User DataBase
-	public ArrayList<User> getUser(int userId){
+	public void createUser(User user){
+		UserJDBC userjdbc = new UserJDBC();
+		try {
+				userjdbc.Create(user);
+		} catch (Exception e) {
+			System.out.println("error getall mehtod\n" + e.getMessage());	
+			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<User> getUser(String username){
 		ArrayList<User> user = null;
 		UserJDBC userjdbc = new UserJDBC();
 		try {
-			user = userjdbc.getAll("SELECT * FROM USERS WHERE userId=(" + userId + ")");
+			
+			user = userjdbc.getAll("SELECT * FROM USERS WHERE userName=(" +"'" + username + "'" + ")");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			System.out.println("error getall mehtod\n" + e.getMessage());	
 			e.printStackTrace();
 		}
 
@@ -27,15 +38,16 @@ public class UserDAO {
 	}
 
 	
-	public void updateUser() {
+	public void updatePassword(int userId,String newPassword) {
 		UserJDBC userjdbc = new UserJDBC();
 
 		try {
-			userjdbc.update(1,"updatePassword", "VEGAN");
+			userjdbc.update(userId,"updatePassword",newPassword);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
-		}
+			System.out.println("error getall mehtod\n" + e.getMessage());	
+			e.printStackTrace();
+			}
 		
 		
 		
@@ -57,11 +69,11 @@ public class UserDAO {
 	}
 	
 	
-	public ArrayList<Rezept> getRezept(int rezeptId) {
+	public ArrayList<Rezept> getRezept(String rezeptTitle) {
 		ArrayList<Rezept> rezepts = new ArrayList<>();
 		RezeptJDBC rezeptjdbc = new RezeptJDBC();
 		try {
-			rezepts = rezeptjdbc.getAll("SELECT * FROM REZEPTE WHERE rezeptId= " + rezeptId);
+			rezepts = rezeptjdbc.getAll("SELECT * FROM REZEPTE WHERE title= " + "'" + rezeptTitle + "'");
 		}catch (Exception e) {
 			System.out.println("error getall mehtod\n" + e.getMessage());	
 		}

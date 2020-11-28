@@ -8,32 +8,47 @@ public class User {
 	
 	private Lifestyle lifestyle;
 	private int userId;
+	private String name;
 	private String userName;
 	private String password;
 	private ArrayList<Integer> favRecepts;
 	private int erstellteRezepte;
 	
-	public User( int userId, String userName, String password, String stLisfstyle) {
+	public User( String userName,String name, String password, String stLisfstyle) {
 		super();
 		this.lifestyle = Lifestyle.valueOf(stLisfstyle);
-		this.userId = userId;
 		this.userName = userName;
+		this.name = name;
 		this.password = password;
 		this.erstellteRezepte =0;
 	}
 	
 	
 	
-	public User( int userId, String userName, String password, ArrayList<Integer> favRecepts, String stLisfstyle, int erstellteRezepte) {
+	public User( int userId, String userName,String name, String password, ArrayList<Integer> favRecepts, String stLisfstyle, int erstellteRezepte) {
 		super();
 		this.lifestyle = Lifestyle.valueOf(stLisfstyle);
 		this.userId = userId;
 		this.userName = userName;
+		this.name = name;
 		this.password = password;
 		this.favRecepts = favRecepts;
 		this.erstellteRezepte = erstellteRezepte;
 	}
 	
+	
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
 	public String getLifstyle() {
 		return lifestyle.name();
 		
@@ -74,11 +89,16 @@ public class User {
 		this.erstellteRezepte = erstellteRezepte;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "User [lifestyle=" + lifestyle.name() + ", userId=" + userId + ", userName=" + userName + ", password="
-				+ password + ", favRecepts=" + favRecepts + ", erstellteRezepte=" + erstellteRezepte + "]";
+		return "User [lifestyle=" + lifestyle + ", userId=" + userId + ", name=" + name + ", userName=" + userName
+				+ ", password=" + password + ", favRecepts=" + favRecepts + ", erstellteRezepte=" + erstellteRezepte
+				+ "]";
 	}
+
+
 	
 	
 
