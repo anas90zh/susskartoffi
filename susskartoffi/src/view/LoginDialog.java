@@ -39,9 +39,6 @@ public class LoginDialog {
 		// for the login info. The button listeners set the login values
 
 
-
-
-
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setPadding(new Insets(10, 10, 10, 10));
@@ -150,7 +147,7 @@ public class LoginDialog {
 		Button newUserBtn = new Button("Neues Konto erstellen");
 		newUserBtn.setOnAction((ActionEvent e) -> {
 
-			NeueUserModalDialog md = new NeueUserModalDialog();
+			CreateUserDialog md = new CreateUserDialog();
 
 			Optional<ButtonType> container = md.showAndWait();
 		});

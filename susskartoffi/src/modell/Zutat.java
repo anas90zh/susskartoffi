@@ -12,7 +12,15 @@ public class Zutat {
 	private int kalorien;
 	private boolean laktosefreie;
 	
-	
+	public Zutat(String label, String unit, int rezeptId, String name, int kalorien, boolean laktosefreie) {
+		super();
+		this.label= Label.valueOf(label.toUpperCase());
+		this.unit = Unit.valueOf(unit.toUpperCase());
+		this.rezeptId = rezeptId;
+		this.name = name;
+		this.kalorien = kalorien;
+		this.laktosefreie = laktosefreie;
+	}
 	public Zutat(int zutatid,int rezeptId ,String name, String unit, int kalorien, boolean laktosefreie, String label){
 		super();
 		this.label= Label.valueOf(label.toUpperCase());

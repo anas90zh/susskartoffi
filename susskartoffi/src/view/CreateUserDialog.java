@@ -24,10 +24,10 @@ import javafx.scene.layout.HBox;
 import modell.User;
 import modell.User.Lifestyle;
 
-public class NeueUserModalDialog extends Dialog<ButtonType>{
+public class CreateUserDialog extends Dialog<ButtonType>{
 	public String lifestyle = null;
 
-	public NeueUserModalDialog() {
+	public CreateUserDialog() {
 		this.setTitle("Registration");
 		this.setHeaderText("Registration");
 
