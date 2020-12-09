@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import db.UserJDBC;
 import modell.User;
 
-public class AdminDAO {
+public class AdminDAO extends UserDAO{
 
 	public ArrayList<User> getUser(){
 		ArrayList<User> user = null;

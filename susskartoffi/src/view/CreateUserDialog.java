@@ -1,12 +1,10 @@
 package view;
 
-import java.net.URI;
-import java.nio.file.Paths;
+
 
 import dao.UserDAO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +20,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import modell.User;
-import modell.User.Lifestyle;
 
 public class CreateUserDialog extends Dialog<ButtonType>{
 	public String lifestyle = null;
@@ -47,13 +44,12 @@ public class CreateUserDialog extends Dialog<ButtonType>{
 		gridPane.add(nameField, 1,1);
 
 		// Add UserName Block
-		Label userNameLabel = new Label("User Name : ");
+		Label userNameLabel = new Label("UserName : ");
 		gridPane.add(userNameLabel, 0,2);
 		TextField userNameField = new TextField();
 		userNameField.setMaxWidth(200);
 		nameField.setPrefHeight(40);
 		gridPane.add(userNameField, 1,2);
-
 		// Add Lifstyle Block
 		Label lifestyleLabel = new Label("lifestyleLabel ");
 		gridPane.add(lifestyleLabel, 0,3);
@@ -61,9 +57,14 @@ public class CreateUserDialog extends Dialog<ButtonType>{
 		hblifstyle.setPadding(new Insets(10));
 		hblifstyle.setSpacing(10);
 		RadioButton rb1 = new RadioButton("VEGAN");
+		rb1.setUserData("VEGAN");
 		RadioButton rb2 = new RadioButton("VEGETARIA");
+		rb2.setUserData("VEGAN");
 		RadioButton rb3 = new RadioButton("MEATLOVER");
+		rb3.setUserData("VEGAN");
 		RadioButton rb4 = new RadioButton("ICHESSEALLES");
+		rb4.setUserData("VEGAN");
+
 		ToggleGroup lifstyleTG = new ToggleGroup();
 
 		rb1.setToggleGroup(lifstyleTG);		
@@ -93,26 +94,26 @@ public class CreateUserDialog extends Dialog<ButtonType>{
 		GridPane.setHalignment(submitButton, HPos.CENTER);
 		GridPane.setMargin(submitButton, new Insets(20, 0,20,0));
 
-
 		lifstyleTG.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+
 			@Override
 			public void changed(ObservableValue<? extends Toggle> arg0, Toggle arg1, Toggle arg2) {
-				if(rb1.isSelected())
-					lifestyle = "VEGAN";
-				else if(rb2.isSelected())
-					lifestyle = "VEGETARIA";
-				else if(rb3.isSelected())
-					lifestyle = "MEATLOVER";
-				else if(rb4.isSelected())
-					lifestyle = "ICHESSEALLES";
+				if(arg2 !=null) {
+					lifestyle = lifstyleTG.getSelectedToggle().getUserData().toString();
+
+				}
+
+			}
+
+		});
+		submitButton.setOnAction(e -> {
+			if(!nameField.getText().isEmpty() && !userNameField.getText().isEmpty() && !passwordField.getText().isEmpty()){
+				User user = new User(userNameField.getText(),nameField.getText(), passwordField.getText(), lifestyle);
+				UserDAO userDAO = new UserDAO();
+				userDAO.createUser(user);
+				submitButton.setDisable(true);
 			}
 			
-		});
-		
-		submitButton.setOnAction((ActionEvent e) -> {
-			User user = new User(userNameLabel.getText(),nameField.getText(), passwordField.getText(), lifestyle);
-			UserDAO userDAO = new UserDAO();
-			userDAO.createUser(user);
 
 
 		});
@@ -120,11 +121,12 @@ public class CreateUserDialog extends Dialog<ButtonType>{
 
 		this.getDialogPane().setContent(gridPane);
 		ButtonType cancel = ButtonType.CANCEL;
+	
 
 		this.getDialogPane().getButtonTypes().addAll(cancel);
 
 		this.setResizable(true);
-		this.getDialogPane().setPrefSize(540, 380);
+		this.getDialogPane().setPrefSize(600, 380);
 
 
 

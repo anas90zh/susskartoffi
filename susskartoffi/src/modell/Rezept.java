@@ -38,6 +38,21 @@ public class Rezept {
 		this.vorbereitungDauer = vorbereitungDauer;
 
 	}
+	public Rezept(int userId,String herkunft, String diaet, int vorbereitungDauer, String title, boolean sichbarkeit, String bescreibung,
+			int portionen,double kosten, ArrayList<Zutat> zutaten ,ArrayList<String> schritte) {
+		this.herkunft = herkunft;
+		this.userId = userId;
+		this.title = title;
+		this.sichtbarkeit = sichbarkeit;
+		this.beschreibung = bescreibung;
+		this.schritte = schritte;
+		this.zutaten = zutaten;
+		this.portionen = portionen;
+		this.kosten= kosten;
+		this.diaet = diaet;
+		this.vorbereitungDauer = vorbereitungDauer;
+
+	}
 
 
 

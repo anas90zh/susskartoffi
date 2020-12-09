@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import modell.Rezept;
+import modell.User;
 import modell.Zutat;
 
 public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
@@ -209,8 +210,41 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 		
 	}
 	
-	
-	
+
+	public int getRezeptId() throws Exception{
+		int rezeptid = 0;
+		ResultSet rs = null;
+		
+		//in try ressourcen wird 
+		//connection erstellen 
+		//SQL Anweisungen erzeugen mit Statement und  durchführen 
+		try (Connection conn = DriverManager.getConnection(connString)){
+			System.out.println("Connection established userJDBClass/ get Methode ");
+			
+			try(PreparedStatement stmt = conn.prepareStatement("SELECT * FROM REZEPTIDTABLE ORDER BY rezeptId DESC FETCH FIRST ROW ONLY")) {
+				//resultSet query duchfuhren und mit hilfe der while schlieife die User ArrayList füllen
+				rs = stmt.executeQuery();
+				while(rs.next()) {
+					rezeptid =  rs.getInt("rezeptId");
+				}
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error getRezeptId mehtod\n" + e.getMessage());	
+		}
+		//resultSet schließen
+		finally{
+			try {
+				if(rs!=null)
+					rs.close();
+			}catch(SQLException e) {
+				System.out.println("error getRezeptId mehtod , in finally block rs.close\n " + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+
+		return rezeptid;
+	}
 
 	@Override
 	public ArrayList<Rezept> getAll(String selectStmt) throws Exception {
@@ -275,8 +309,37 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 		// TODO Auto-generated method stub
 
 	} 
+	public void CreateRezeptId(int userid) throws Exception {
+		PreparedStatement pstmt = null;
+		try (Connection conn = DriverManager.getConnection(connString)){
+			
+			String insertRe= "INSERT INTO REZEPTIDTABLE (userId) VALUES(" +
+					"? " + //UserId
+					")";
+			pstmt = conn.prepareStatement(insertRe);
+
+			pstmt.setInt(1,userid);
+
+			pstmt.executeUpdate();
+
+			System.out.println("rezeptID inserted");
+			
+
+		} catch (SQLException e) {
+			System.out.println("error Create mehtod\n" + e.getMessage());	
+		}
+		finally{
+			try {
+				if(pstmt!=null)
+					pstmt.close();
 
 
+			}catch(SQLException e) {
+				System.out.println("error bei connection schliessen\n" + e.getMessage());
+				e.printStackTrace();	
+			}
+		}
+	}
 	@Override
 	public void Create(Rezept rezept) throws Exception {
 		PreparedStatement pstmt = null;
@@ -310,23 +373,12 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 				pstmt.setInt(1,rezept.getRezeptId());
 				pstmt.setString(2,zutat.getName());
 				pstmt.setString(3,zutat.getUnit());
-				pstmt.setInt(4,zutat.getKalorien());
+				pstmt.setInt(4,zutat.getmenge());
 				pstmt.setBoolean(5, zutat.isLaktosefreie());
 				pstmt.setString(6,zutat.getLabel());
 				pstmt.executeUpdate();
 			}
 
-
-
-
-			//insert stmt in to Rezept table
-
-			//						String selectWhere = "SELECT * FROM REZEPTE WHERE  rezeptId=" + rezept.getRezeptId();  
-			//						rs = pstmt.executeQuery(selectWhere);
-			//						if(rs.next()) {
-			//							System.out.println("Rezept already exist ");
-			//							return ;
-			//						}
 
 			String insertRe= "INSERT INTO REZEPTE(userId, rezeptId , herkunft, diaet, vorbereitungDauer, title, sichtbarkeit, beschreibung,portionen, Kosten) VALUES(" +
 					"?, " + //UserId
@@ -420,6 +472,14 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 			} catch (SQLException e) {
 				System.out.println("error in drop table block schritte\n" + e.getMessage());		}
 
+			try {
+				rs = conn.getMetaData().getTables(null, null, "REZEPTIDTABLE" ,new String[] {"TABLE"});
+				if(rs.next()) {
+					stmt.executeUpdate("DROP TABLE " + "rezeptidtable");				}
+				System.out.println("dropTable rezeptidtable excuted");
+
+			} catch (SQLException e) {
+				System.out.println("error in drop table block DROPrezeptidtable\n" + e.getMessage());		}
 
 			String zutatTable =" CREATE TABLE ZUTAT ( zutatid INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1) , " + 
 					" rezeptId INTEGER NOT NULL, " + 
@@ -430,7 +490,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 					" label VARCHAR(10)," + 
 					" PRIMARY KEY( zutatid ))";							
 			stmt.executeUpdate(zutatTable);
-			System.out.println("ZutatTable created 1/3");
+			System.out.println("ZutatTable created 1/4");
 
 
 			String rezeptTable = "CREATE TABLE REZEPTE( " + 
@@ -446,7 +506,7 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 					" kosten FLOAT, " + 
 					" PRIMARY KEY( rezeptId ))";
 			stmt.executeUpdate(rezeptTable);
-			System.out.println("RezeptTable created 2/3");
+			System.out.println("RezeptTable created 2/4");
 
 
 			String schrittTable = "CREATE TABLE SCHRITTE ( " +
@@ -455,11 +515,18 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 					" text VARCHAR(200), " + 
 					" PRIMARY KEY( schrittId ))";
 			stmt.executeUpdate(schrittTable);
-			System.out.println("schrittTable created 3/3");
-
+			System.out.println("schrittTable created 3/4");
+			
+			String rezeptIdTable = "CREATE TABLE REZEPTIDTABLE ( " +
+					" rezeptId INTEGER GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1) ," + 
+					" userId INTEGER NOT NULL, " + 
+			
+					" PRIMARY KEY( rezeptId ))";
+			stmt.executeUpdate(rezeptIdTable);
+			System.out.println("rezeptIdTable created 4/4");
 
 		} catch (SQLException e) {
-			System.out.println("error in main tryCath block\n" + e.getMessage());		}
+			System.out.println("error in main tryCath  block\n posible in create tables" + e.getMessage());		}
 
 		finally{
 			try {
@@ -525,6 +592,8 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 
 	
 
+	
+
 
 	
 	
@@ -544,22 +613,6 @@ public class RezeptJDBC implements IKlassejdbc<Rezept>, IRezeptJDB{
 	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

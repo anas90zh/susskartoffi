@@ -15,33 +15,33 @@ import modell.Zutat;
 public class Main {
 
 	private static ArrayList<Integer> ar = new ArrayList<>();
-	private static ArrayList<Zutat> arra = new ArrayList<>();
+	private static ArrayList<Zutat> zu = new ArrayList<>();
+	private static ArrayList<String> scg = new ArrayList<>();
 
 	public static void main(String[] args) {
-		ar.add(2);
 
-		arra.add(new Zutat(1,"spinat", "g", 100, true, "PLANTBASED"));
-		ArrayList<String>  hm = new ArrayList<>();
-		hm.add("test");
-		hm.add("schritt1");
-		hm.add("schritt2");
-
-		
+		zu.add(new Zutat("name", "g", 4, true, "VEGAN"));
+		scg.add("asd");
 
 		
 		try {
 
 			UserDAO userD = new UserDAO();	
-			RezeptJDBC rezeptJDBD = new RezeptJDBC();
+//			RezeptJDBC rezeptJDBD = new RezeptJDBC();
 //			rezeptJDBD.InitDatenbank();
+//			rezeptJDBD.CreateRezeptId(1);
+//			rezeptJDBD.getRezeptId();
 			
-			Rezept re = new Rezept(1,5,"thai2","diat2",525,"title",true,"sehr lecker222",4,20.0,arra,hm);
-			rezeptJDBD.Create(re);
+//			Rezept re = new Rezept(1, "herkunft", "diaet", 5, "title", true, "bescreibung", 5, 50, zu, scg);
+//			userD.CreateRezept(re,1);
+			
+			
+			
 //			rezeptJDBD.updateZutat(2,1, "laktosefreie", "false");
 //			rezeptJDBD.updateSchritte(2, 1, "bla bla");
 
-			ArrayList<Rezept> ae1 = userD.getAllRezepte();
-			ae1.stream().forEach(System.out::println);
+//			ArrayList<Rezept> ae1 = userD.getAllRezepte();
+//			ae1.stream().forEach(System.out::println);
 
 //			
 //			ArrayList<Zutat> ae =rezeptJDBD.getAlltest();
@@ -50,14 +50,15 @@ public class Main {
 		
 //						UserJDBC userJDBC = new UserJDBC();
 //						userJDBC.InitDatenbank();
-		
-//						User us = new User( "anas0090", "Anna ortner","password","VEGETARIA");
-//						userJDBC.Create(us);
+						User us = new User( "asd", "dasdasddd ortner","asdasdasdasd","VEGETARIA");
+////						userJDBC.Create(us);
+//						UserDAO userDAO = new UserDAO();
+//						userDAO.createUser(us);
 						
-//						AdminDAO dao = new AdminDAO();
+						AdminDAO dao = new AdminDAO();
 //						dao.deleteUser();
-//						ArrayList<User> a = dao.getUser();
-//						a.stream().forEach(System.out::println);
+ 						ArrayList<User> a = dao.getUser();
+						a.stream().forEach(System.out::println);
 						
 //						UserDAO jd = new UserDAO();
 //						jd.updateUser();

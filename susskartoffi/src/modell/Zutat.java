@@ -9,35 +9,46 @@ public class Zutat {
 	private int zutatid;
 	private int rezeptId;
 	private String name;
-	private int kalorien;
+	private int menge;
 	private boolean laktosefreie;
 	
-	public Zutat(String label, String unit, int rezeptId, String name, int kalorien, boolean laktosefreie) {
+	
+	public Zutat(String label, String unit, int rezeptId, String name, int menge, boolean laktosefreie) {
 		super();
 		this.label= Label.valueOf(label.toUpperCase());
 		this.unit = Unit.valueOf(unit.toUpperCase());
 		this.rezeptId = rezeptId;
 		this.name = name;
-		this.kalorien = kalorien;
+		this.menge = menge;
 		this.laktosefreie = laktosefreie;
 	}
-	public Zutat(int zutatid,int rezeptId ,String name, String unit, int kalorien, boolean laktosefreie, String label){
+	public Zutat(int zutatid,int rezeptId ,String name, String unit, int menge, boolean laktosefreie, String label){
 		super();
 		this.label= Label.valueOf(label.toUpperCase());
 		this.unit = Unit.valueOf(unit.toUpperCase());
 		this.name = name;
 		this.zutatid= zutatid;
 		this.rezeptId=rezeptId;
-		this.kalorien = kalorien;
+		this.menge = menge;
 		this.laktosefreie = laktosefreie;
 	}
-	public Zutat(int zutatid, String name, String unit, int kalorien, boolean laktosefreie, String label){
+	public Zutat(int zutatid, String name, String unit, int menge, boolean laktosefreie, String label){
 		super();
 		this.label= Label.valueOf(label.toUpperCase());
 		this.unit = Unit.valueOf(unit.toUpperCase());
 		this.name = name;
 		this.zutatid= zutatid;
-		this.kalorien = kalorien;
+		this.menge = menge;
+		this.laktosefreie = laktosefreie;
+	}
+	
+	public Zutat( String name, String unit, int menge, boolean laktosefreie, String label){
+		super();
+		this.label= Label.valueOf(label.toUpperCase());
+		this.unit = Unit.valueOf(unit.toUpperCase());
+		this.name = name;
+		this.zutatid= zutatid;
+		this.menge = menge;
 		this.laktosefreie = laktosefreie;
 	}
 
@@ -93,13 +104,13 @@ public class Zutat {
 	}
 
 
-	public int getKalorien() {
-		return kalorien;
+	public int getmenge() {
+		return menge;
 	}
 
 
-	public void setKalorien(int kalorien) {
-		this.kalorien = kalorien;
+	public void setmenge(int menge) {
+		this.menge = menge;
 	}
 
 
@@ -116,7 +127,7 @@ public class Zutat {
 	@Override
 	public String toString() {
 		return "Zutat [label=" + label + ", unit=" + unit + ", zutatid=" + zutatid + ", rezeptId=" + rezeptId
-				+ ", name=" + name + ", kalorien=" + kalorien + ", laktosefreie=" + laktosefreie + "]";
+				+ ", name=" + name + ", menge=" + menge + ", laktosefreie=" + laktosefreie + "]";
 	}
 
 

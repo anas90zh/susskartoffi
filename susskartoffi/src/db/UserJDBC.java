@@ -30,7 +30,7 @@ public class UserJDBC implements IKlassejdbc<User>{
 			System.out.println("Connection established userJDBClass /add Mehode ");
 			try (Statement stmt = conn.createStatement() ){
 				//checken ob die User schon exsistiern 
-				String selectWhere = "SELECT * FROM USERS WHERE  userId=" + user.getUserId();
+				String selectWhere = "SELECT * FROM USERS WHERE userId=" + user.getUserId();
 				rs = stmt.executeQuery(selectWhere);
 				if(rs.next()) {
 					System.out.println("user already exist ");

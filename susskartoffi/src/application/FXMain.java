@@ -11,11 +11,10 @@ import view.HomePage;
 
 public class FXMain extends Application {
 
-	private static int rezeptId;
 	
 	@Override
 	public void start(Stage primaryStage) {
-		
+	
 		
 		VBox startpage = HomePage.HomePage();
 		
@@ -32,16 +31,6 @@ public class FXMain extends Application {
 	}
 
 
-
-	public static int getRezeptId() {
-		return rezeptId;
-	}
-
-
-
-	public static void setRezeptId(int rezeptId) {
-		FXMain.rezeptId = rezeptId;
-	}
 
 
 
