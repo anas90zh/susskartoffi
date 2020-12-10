@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modell.Admin;
+import modell.Rezept;
 import modell.User;
 import modell.Zutat;
 
@@ -18,7 +19,8 @@ public interface IKlassejdbc<T> {
 
 	public ArrayList<T> getAll(String t) throws Exception;
 
-	public void delete(int t) throws Exception;
+
+	public 	void delete(Rezept rezept) throws Exception;
 
 
 	

@@ -53,16 +53,16 @@ import modell.Zutat.Unit;
 
 public class HomePage {
 	private static Label logo ;
-	private static UserDAO userDAO = null;
+	private static UserDAO userDAO = new UserDAO();;
 	private static BorderPane mainPane;
 	private	static Button userProfil = null;
-	private static User user;
+	private static User user;		
+	private static ArrayList<Rezept> allRezeptList= null ;
+	private static ListView<String> recepeList;
 
 
 	public static VBox HomePage() {
 		//		ArrayList of all the Recipes in DB
-		userDAO = new UserDAO();
-		ArrayList<Rezept> allRezeptList= null ;
 		ArrayList<Rezept> userRezepte =null;
 
 		//		First menu Bar
@@ -97,41 +97,22 @@ public class HomePage {
 
 		//		the Left side of the BorderPane /(mainPane)
 		//		create and fill ListView  with Recipes TitlegetUserRecipes
-		allRezeptList =  userDAO.getAllRezepte();
-		ObservableList<String> iteams = FXCollections.observableArrayList(getList(allRezeptList));
 
 		//		call method to filter the user recipe and then filter the recipe name
-		if(user!=null) {
-			userRezepte = getUserRecipes(allRezeptList, user.getUserId());
-			ObservableList<String> useriteams = FXCollections.observableArrayList(getList(userRezepte));
-
-		}
-
-		ListView<String> recepeList = new ListView<>();
-
-
-		//		tg.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-		//
-		//			@Override
-		//			public void changed(ObservableValue<? extends Toggle> arg0, Toggle arg1, Toggle arg2) {
-		//				if(rb1.isSelected()) {
-		//					recepeList.getItems().clear();
-		//					recepeList.setItems(useriteams);
-		//
-		//					
-		//				}else if(rb2.isSelected()) {
-		//					recepeList.getItems().clear();
-		//					recepeList.setItems(iteams);
-		//
-		//				}
-		//					
-		//			}
-		//			
-		//		});
-		//		
+	
+		allRezeptList =  userDAO.getAllRezepte();
+		ObservableList<String> iteams = FXCollections.observableArrayList(getList(allRezeptList));
+		recepeList = new ListView<>(iteams);
+//		if (!recepeList.getItems().isEmpty()) {
+//			recepeList.getSelectionModel().select(0);
+//		}
+		
 
 
-		recepeList.setItems(iteams);
+
+
+
+	
 
 
 
@@ -144,14 +125,10 @@ public class HomePage {
 		create.setOnAction(e -> {
 			if(user!=null) {
 			CreateRezeptDialon mc = new CreateRezeptDialon(user);
-			Optional<ButtonType> container = mc.showAndWait();
-//			if(container.isPresent() && container.get() == ButtonType.OK) {
-//				 recepeList.getItems().clear();
-//					ArrayList<Rezept> allRezeptListUpdate = userDAO.getAllRezepte();
-//				ObservableList<String> updatediteams= FXCollections.observableArrayList(getList(allRezeptListUpdate));
-//
-//				recepeList.setItems(updatediteams);
-//			}
+			Optional<String> container = mc.showAndWait();
+			if(container.isPresent() && container.get() != null) {
+				 recepeList.getItems().add(container.get());
+			}
 			
 			}else {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -208,6 +185,29 @@ public class HomePage {
 
 				Button edit = new Button("Rezept bearbeiten");
 				Button delete = new Button("Rezept löschen");
+				delete.setOnAction(e -> {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Rezept Löschen");
+					alert.setHeaderText("Drücken sie auf Ok für Bestätigen");
+					Optional<ButtonType> result =alert.showAndWait();
+					if(result.isPresent() && result.get() == ButtonType.OK) {
+						userDAO.deleteRezept(rezept);
+						recepeList.getItems().remove(recepeList.getSelectionModel().getSelectedIndex());
+						
+					
+					}
+					
+					
+				});
+				
+				edit.setOnAction(l-> {
+					
+					
+
+				});
+				
+				
+				
 				HBox editBox = new HBox(edit,delete);
 				editBox.setPadding(new Insets(10));
 				editBox.setSpacing(12);
@@ -538,5 +538,17 @@ public class HomePage {
 
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 

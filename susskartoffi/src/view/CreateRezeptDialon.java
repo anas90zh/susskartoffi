@@ -20,17 +20,19 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Callback;
 import modell.Rezept;
 import modell.User;
 import modell.Zutat;
 
-public class CreateRezeptDialon extends Dialog<ButtonType> {
+public class CreateRezeptDialon extends Dialog<String> {
 	private ArrayList<String> schrittList = new  ArrayList<>();
 	private ArrayList<Zutat> zutatList = new  ArrayList<>();
 	private	String unittoggelGr;
@@ -402,14 +404,31 @@ public class CreateRezeptDialon extends Dialog<ButtonType> {
 		mainBox.setCenter(gp);
 
 
-		this.getDialogPane().setContent(mainBox);
-		ButtonType cancel = ButtonType.CANCEL;
-		ButtonType ok = ButtonType.APPLY;
+		ButtonType apply= new ButtonType("Übernehmen", ButtonData.OK_DONE);
+		this.setResultConverter(new Callback<ButtonType,String>(){
+			@Override
+			public String call(ButtonType arg0) {
+				if(arg0== apply)
+				if(!titletxf.getText().isEmpty()) {
+					
+				}
 
-		this.getDialogPane().getButtonTypes().addAll(ok,cancel);
+					return titletxf.getText();
+	
+			}
+			
+		});
+		
+		
+		
+//		ButtonType cancel = ButtonType.CANCEL;
+
+		this.getDialogPane().setContent(mainBox);
+
+		this.getDialogPane().getButtonTypes().addAll(apply);
 
 		this.setResizable(true);
-		this.getDialogPane().setPrefSize(540, 380);
+		this.getDialogPane().setPrefSize(600, 480);
 
 
 

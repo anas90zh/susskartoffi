@@ -116,5 +116,31 @@ public class UserDAO {
 	
 	
 	}
+	
+	
+	
+	
+	public void deleteRezept(Rezept  rezept){
+		
+		try {
+			RezeptJDBC rezeptJDBD = new RezeptJDBC();
+			rezeptJDBD.delete(rezept);
+			
+			System.out.println("Rezept deleted");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

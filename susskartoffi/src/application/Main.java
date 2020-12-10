@@ -20,8 +20,8 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		zu.add(new Zutat("name", "g", 4, true, "VEGAN"));
-		scg.add("asd");
+//		zu.add(new Zutat("name", "g", 4, true, "VEGAN"));
+//		scg.add("asd");
 
 		
 		try {
@@ -31,6 +31,15 @@ public class Main {
 //			rezeptJDBD.InitDatenbank();
 //			rezeptJDBD.CreateRezeptId(1);
 //			rezeptJDBD.getRezeptId();
+	
+			ArrayList<Rezept> a  = 	userD.getAllRezepte();
+//			System.out.println(a.get(1));
+
+			a.stream().forEach(System.out::println);
+//			userD.deleteRezept(a.get(0));
+			a.stream().forEach(System.out::println);
+//			System.out.println(a.get(1));
+
 			
 //			Rezept re = new Rezept(1, "herkunft", "diaet", 5, "title", true, "bescreibung", 5, 50, zu, scg);
 //			userD.CreateRezept(re,1);
@@ -48,17 +57,17 @@ public class Main {
 //			ae.stream().forEach(System.out::println);
 
 		
-//						UserJDBC userJDBC = new UserJDBC();
+						
 //						userJDBC.InitDatenbank();
-						User us = new User( "asd", "dasdasddd ortner","asdasdasdasd","VEGETARIA");
+//						User us = new User( "asd", "dasdasddd ortner","asdasdasdasd","VEGETARIA");
 ////						userJDBC.Create(us);
 //						UserDAO userDAO = new UserDAO();
 //						userDAO.createUser(us);
 						
-						AdminDAO dao = new AdminDAO();
+//						AdminDAO dao = new AdminDAO();
 //						dao.deleteUser();
- 						ArrayList<User> a = dao.getUser();
-						a.stream().forEach(System.out::println);
+// 						ArrayList<User> a = dao.getUser();
+//						a.stream().forEach(System.out::println);
 						
 //						UserDAO jd = new UserDAO();
 //						jd.updateUser();
